@@ -1,9 +1,6 @@
-# gcl.py
-
 class GeneradorCongruencialLineal:
-    def __init__(self, mensaje):
-        self.mensaje = mensaje
-        self.longitud = len(mensaje)
+    def __init__(self, longitud):
+        self.longitud = longitud
         self.modulo = self.longitud
         self.incremento = self.get_incremento()
         self.multiplicador = self.get_multiplicador()
@@ -39,4 +36,5 @@ class GeneradorCongruencialLineal:
         for _ in range(self.longitud):
             semilla = (self.multiplicador * semilla + self.incremento) % self.modulo
             secuencia.append(semilla / self.modulo)  # Genera número tipo 0.xxx
+        print("Secuencia generada:", secuencia)
         return secuencia

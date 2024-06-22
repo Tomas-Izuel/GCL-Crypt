@@ -1,4 +1,3 @@
-# tests.py
 from math import expm1
 import numpy as np
 from scipy.stats import chisquare, kstest, norm
