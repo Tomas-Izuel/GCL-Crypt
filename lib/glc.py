@@ -1,3 +1,4 @@
+# gcl.py
 
 class GeneradorCongruencialLineal:
     def __init__(self, mensaje):
@@ -29,9 +30,10 @@ class GeneradorCongruencialLineal:
                         primo2 = False
                 if primo2:
                     return k
+        # Si no se encontró ningún número primo que cumpla la condición, se elige un valor por defecto
+        return 2  # Podrías elegir cualquier valor como default
 
     def generar_secuencia(self):
-        # Generar secuencia de números pseudoaleatorios usando GCL
         secuencia = []
         semilla = 2
         for _ in range(self.longitud):

@@ -1,12 +1,22 @@
-def encriptar_mensaje(mensaje, resultados_tests):
-    indice_test = sum(resultados_tests)  # Calcular el índice según los resultados de los tests
-    multiplicador = 10 ** len(str(ord('A')))  # Multiplicador para ajustar a dígitos ASCII
+# encripter.py
+
+def encriptar_mensaje(secuencia, mensaje, resultados_tests):
     mensaje_encriptado = []
+    multiplicador = convertir_binario_a_decimal(resultados_tests)
     
-    for i, letra in enumerate(mensaje):
-        num_aleatorio = resultados_tests[i] * multiplicador
-        valor_ascii = ord(letra)
-        valor_encriptado = int(num_aleatorio) + valor_ascii + indice_test
+    for i in range(len(mensaje)):
+        valor_encriptado = int(secuencia[i]) + ord(mensaje[i]) * multiplicador
+        # Asegurarse de que el valor encriptado se mantenga en el rango de valores de caracteres ASCII válidos
+        while valor_encriptado > 255:
+            valor_encriptado -= 255
         mensaje_encriptado.append(chr(valor_encriptado))
     
-    return ''.join(mensaje_encriptado)
+    # Unir la lista en una cadena antes de devolver
+    return ''.join(mensaje_encriptado) + chr((multiplicador))
+
+def convertir_binario_a_decimal(binario):
+    decimal = 1
+    for i in range(len(binario)):
+        decimal += binario[i] * 2**(len(binario) - 1 - i)
+    return decimal
+

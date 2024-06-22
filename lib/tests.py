@@ -1,6 +1,7 @@
 # tests.py
+from math import expm1
 import numpy as np
-from scipy.stats import chisquare, kstest
+from scipy.stats import chisquare, kstest, norm
 from collections import Counter
 
 def run_tests(secuencia):
@@ -65,11 +66,13 @@ def poker_test(secuencia):
     frecuencias = Counter(int(x * 10) for x in secuencia)
     
     f_i = [frecuencias[i] for i in range(10)]
-    g = 0.0
-    for i in range(10):
-        g += f_i[i]**2
+    g = sum(f_i[i]**2 for i in range(10))
     
     poker = (16 / 5000) * g - 5000
-    pvalue = 1 - np.exp(-poker)
+    # Uso de expm1 para evitar overflow
+    if poker < 0:
+        pvalue = -expm1(poker)
+    else:
+        pvalue = 1 - np.exp(-poker)
     
     return pvalue
