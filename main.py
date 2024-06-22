@@ -1,53 +1,37 @@
-# -*- coding: utf-8 -*-
-from crypto.decripter import desencriptar_mensaje
-from crypto.encripter import encriptar_mensaje
-from lib.glc import GeneradorCongruencialLineal
-from lib.tests import run_tests
+# main.py
+from encriptador.generador_congruencial import generar_parametros_desde_clave, generador_congruencial_lineal
+from encriptador.normalizacion import normalizar
+from encriptador.encriptador import encriptar_mensaje
+from encriptador.pruebas import run_tests
+from encriptador.utilidades import nombres_claves
 
-def main():
-    while True:
-        print("\nMenú:")
-        print("1. Encriptar mensaje")
-        print("2. Desencriptar mensaje")
-        print("3. Salir")
-        
-        opcion = input("Seleccione una opción: ")
-        
-        if opcion == "1":
-            mensaje = input("Ingrese el mensaje a encriptar: ")
-            
-            longitud = len(mensaje)
-            generador = GeneradorCongruencialLineal(longitud)
-            secuencia = generador.generar_secuencia()
-            test = run_tests(secuencia)
-            print("Tests:", test)
+# Generar parámetros del GCL a partir de la clave
+secuencia_prueba = generador_congruencial_lineal(1664525, 1013904223, 2**32, 123456789, 1000)
+resultados_tests = run_tests(normalizar(secuencia_prueba, 2**32))
 
-            print("\n")
+clave_compartida = nombres_claves[tuple(resultados_tests)]
+print("Clave generada:", clave_compartida)
 
-            mensaje_encriptado = encriptar_mensaje(secuencia, mensaje, test)
-            print("Mensaje encriptado:", mensaje_encriptado)
-            
-        
-        elif opcion == "2":
-            mensaje_encriptado = input("Ingrese el mensaje encriptado: ")
-            
-            longitud = len(mensaje_encriptado) - 1
-            generador = GeneradorCongruencialLineal(longitud)
-            secuencia = generador.generar_secuencia()
-            test = run_tests(secuencia)
-            print("Tests:", test)
+a, c, m, seed = generar_parametros_desde_clave(clave_compartida)
+n = 100  # Longitud del mensaje
 
-            print("\n")
+# Generar números pseudoaleatorios
+random_numbers = generador_congruencial_lineal(a, c, m, seed, n)
 
-            mensaje_desencriptado = desencriptar_mensaje(mensaje_encriptado, secuencia, test)
-            print("Mensaje desencriptado:", mensaje_desencriptado)
-        
-        elif opcion == "3":
-            print("Saliendo del programa...")
-            break
-        
-        else:
-            print("Opción no válida, por favor intente nuevamente.")
+# Normalizar números
+random_numbers_normalizados = normalizar(random_numbers, m)
 
-if __name__ == "__main__":
-    main()
+opcion = input("Escriba el mensaje a encriptar: ")
+# Mensaje a encriptar
+mensaje = opcion
+
+# Encriptar el mensaje
+mensaje_encriptado = encriptar_mensaje(mensaje, random_numbers_normalizados)
+print("Mensaje encriptado:", mensaje_encriptado)
+
+# Para desencriptar el mensaje (usando la misma clave)
+a, c, m, seed = generar_parametros_desde_clave(clave_compartida)
+random_numbers = generador_congruencial_lineal(a, c, m, seed, n)
+random_numbers_normalizados = normalizar(random_numbers, m)
+mensaje_desencriptado = encriptar_mensaje(mensaje_encriptado, random_numbers_normalizados)
+print("Mensaje desencriptado:", mensaje_desencriptado)

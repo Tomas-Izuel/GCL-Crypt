@@ -1,7 +1,8 @@
-from math import expm1
+# pruebas.py
 import numpy as np
 from scipy.stats import chisquare, kstest, norm
 from collections import Counter
+from math import expm1
 
 def run_tests(secuencia):
     resultados_tests = []
