@@ -19,10 +19,10 @@ def generar_parametros_desde_clave(clave):
     
     return a, c, m, seed
 
-def generador_congruencial_lineal(a, c, m, seed, n):
+def generador_congruencial_lineal(a, b, m, seed, n):
     random_numbers = []
     X = seed
     for _ in range(n):
-        X = (a * X + c) % m
+        X = (a * X + b) % m
         random_numbers.append(X)
     return random_numbers
